@@ -10,7 +10,7 @@ if [ -z "$extension" ]; then
     echo "You did not enter a file extension"
 else
     find ~ -type f -name "*.$extension" -print0 \
-	| xargs -0 -r du -k \
+	| xargs -0 -r du -k \	# the -r flag prevents xargs from running if find returns nothing
 	| awk '{
 	      total+=$1
    	       }
