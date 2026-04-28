@@ -4,20 +4,41 @@
 # defined file extension and displays the total number of those files
 # and their collective size in MB.
 
-#TODO add ability to select specific directory
 #TODO add max-depth
-#TODO add ability to ignore certain directories
-#TODO use getopts
+#TODO add option to ignore certain directories
+#TODO add option for fd instead of find
+#TODO add help
 
-extension=$1
+directory="$HOME"
+extension=""
+
+while getopts "e:d:" opt; do
+    case "$opt" in
+	e)
+	    extension=$OPTARG
+	    ;;
+	d)
+	    directory=$OPTARG
+	    ;;
+	*)
+	    echo "Usage: $0 -e extension [-d directory]"
+	    exit 1
+	    ;;
+    esac
+done
+
+
 
 if [ -z "$extension" ]; then
     echo "You did not enter a file extension"
-else
-    find ~ -type f -name "*.$extension" -print0 \
-	| xargs -0 du -k \
-	| awk '{ total+=$1 }
+    echo "Usa: ./fts.sh -e <extension> [-d <dirctory>]"
+    exit 1
+fi 
+    
+find "$directory" -type f -iname "*.$extension" -print0 \
+    | xargs -0 -r du -k \
+    | awk '{ total+=$1 }
 	           END {
 		         printf("\nTotal files: %d\nTotal Size: %.1f MB\n", NR, total/1024)
 			 }'
-fi 
+
