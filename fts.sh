@@ -48,7 +48,7 @@ else
     find "$directory" -type f -iname "*.$extension" -print0 \
     | xargs -0 -r du -k \
     | awk '{total+=$1}
-	        END {
+        END {
 		printf("\nTotal files: %d\nTotal Size: %.1f MB\n", NR, total/1024)
 		}'
 fi 
