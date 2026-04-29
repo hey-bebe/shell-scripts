@@ -1,10 +1,11 @@
 #!/bin/bash
 
+# All of this can be accomplished with the command 'pkill.' The
+# purpose of this script is to copy the functionality of pkill for
+# educational purposes
+
 echo "process name: "
 read -r y_input
-
-# All of this can be accomplished with the command 'pkill.' But why make things
-# easy? At least this was a learning experience.
 
 # TODO: test if user input matches a value or not
 
