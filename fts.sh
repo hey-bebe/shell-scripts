@@ -6,43 +6,45 @@
 # to specifiy a directory other than the home directory. Use the -f
 # flag to use fd, which is substantially faster than find.
 
-#TODO add max-depth
-#TODO add option to ignore certain directories
-#TODO add help
-#TODO add support for smaller file sizes
-
 directory="$HOME"
 extension=""
 fd=false
 
+#TODO add help option
+
 while getopts "e:d:f" opt; do
     case "$opt" in
-	e)			# specify an extension
-	    extension=${OPTARG#.}
-	    ;;
-	d)			# specifiy a directory
-	    directory=$OPTARG
-	    ;;
-	f)			# Use fd instead of find
-	    fd=true
-	    ;;
-	*)
-	    echo "Usage: $0 -e extension [-d directory] [-f]"
-	    exit 1
-	    ;;
+    e) # specify an extension
+        extension=${OPTARG#.}
+        ;;
+    d) # specifiy a directory
+        directory=$OPTARG
+        ;;
+    f) # Use fd instead of find
+        fd=true
+        ;;
+    *)
+        echo "Usage: $0 -e extension [-d directory] [-f]"
+        exit 1
+        ;;
     esac
 done
 
+#TODO add max-depth
+#TODO add option to ignore certain directories
+#TODO add support for smaller file sizes
+
+#FIXME error with empty argument following -d flag
+
 if [ -z "$extension" ]; then
     echo "You did not enter a file extension"
-    echo "Usage: ./fts.sh -e <extension> [-d <dirctory>] [-f]"
+    echo "Usage: ./fts.sh -e <extension> [-d <directory>] [-f]"
     exit 1
 
-elif [ "$fd" = true ]; then  
-
-    fd -u -0 -t f -e "$extension" . "$directory" \
-    | xargs -0 -r du -k \
-    | awk -v extension="$extension" '
+elif [ "$fd" = true ]; then
+    fd -u -0 -t f -e "$extension" . "$directory" |
+        xargs -0 -r du -k |
+        awk -v extension="$extension" '
 	{
 	    total+=$1
 	}
@@ -55,9 +57,9 @@ elif [ "$fd" = true ]; then
 	}'
 
 else
-    find "$directory" -type f -iname "*.$extension" -print0 \
-    | xargs -0 -r du -k \
-    | awk -v extension="$extension" '
+    find "$directory" -type f -iname "*.$extension" -print0 |
+        xargs -0 -r du -k |
+        awk -v extension="$extension" '
         {
 	    total+=$1
 	}
@@ -68,4 +70,4 @@ else
 		   NR,
 		   total/1024)
 	}'
-fi 
+fi

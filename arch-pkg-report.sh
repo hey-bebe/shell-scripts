@@ -14,7 +14,7 @@ pacman -Q >"${pacList}"
 # Extract package descriptions from pacman
 echo "Creating ${pacReport}"
 awk '{ print $1 }' "${pacList}" | xargs pacman -Qi |
-	awk -F': ' '/^Description/ { print $2 }' >"${pacDesc}"
+    awk -F': ' '/^Description/ { print $2 }' >"${pacDesc}"
 
 # Remove extraneous commas from the package Descriptions
 sed -i 's/,//g' "${pacDesc}"
